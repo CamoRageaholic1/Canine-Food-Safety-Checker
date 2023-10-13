@@ -1,4 +1,4 @@
-﻿const safeFoodsForDogs = [
+const safeFoodsForDogs = [
     "pumpkin",
     "carrot",
     "peanut butter",
@@ -35,19 +35,34 @@
     "quinoa"
 ];
 
+function isPlural(word) {
+    if (word.endsWith("'s")) {
+        return false; // consider words ending in 's as singular
+    }
+    return word[word.length - 1] === 's';
+}
+
 function checkFoodSafety() {
-    const foodInput = document.getElementById("foodInput").value.toLowerCase();
+    const rawInput = document.getElementById("foodInput").value.toLowerCase();
+    const foodInput = rawInput.endsWith("'s") ? rawInput.slice(0, -2) : rawInput; // remove 's if it exists
     const result = document.getElementById("result");
+    const verb = isPlural(rawInput) ? "are" : "is";
 
     if (safeFoodsForDogs.includes(foodInput)) {
-        result.textContent = `${foodInput.charAt(0).toUpperCase() + foodInput.slice(1)} is safe for canine consumption.`;
+        result.textContent = `${rawInput.charAt(0).toUpperCase() + rawInput.slice(1)} ${verb} safe for canine consumption.`;
         result.classList.remove("not-recommended");
-        result.classList.add("safe-food");  // Add the class to make the text big and green
+        result.classList.add("safe-food");
     } else {
-        result.textContent = `${foodInput.charAt(0).toUpperCase() + foodInput.slice(1)} is not recommended for canine consumption.`;
+        result.textContent = `${rawInput.charAt(0).toUpperCase() + rawInput.slice(1)} ${verb} not recommended for canine consumption.`;
         result.classList.add("not-recommended");
-        result.classList.remove("safe-food");  // Remove the class if it exists
+        result.classList.remove("safe-food");
     }
 }
 
+let $inputElement = $("#userName");
+$inputElement.on("keyup", function (event) {
+    if (event.key === "Enter") {
+        checkFoodSafety();
+    }
+});
 
